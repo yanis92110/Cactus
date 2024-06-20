@@ -20,11 +20,18 @@ def montrerCarte(main):
     print(main.cartes[0])
 
     print(main.cartes[1])
+def paquet_vide(paquet):
+    if(paquet.cartes == []):
+        derniere_carte=defausse.pop()
+        paquet.cartes=defausse.cartes.copy()
+        paquet=paquet.battre
+        defausse=[derniere_carte]
 
-def pioche(joueur):
+def pioche(joueur,paquet):
         main=mains_joueurs[joueur]
         print("Vous allez piocher dans la pioche")
         time.sleep(1)
+        paquet_vide(paquet)
         temp=paquet.pop_carte()
         print(f"La carte qui a été pioché est: {temp}")
         print("Voulez vous garder la carte ou la défausser ? (g ou d)")
@@ -73,7 +80,7 @@ def piocheOuDefausse(joueur):
             print("Que voulez vous faire ?\n d: piocher dans la défausse\n p: piocher dans la pioche")
             reponse=input()
         if(reponse=='p'):
-            pioche(joueur)
+            pioche(joueur,paquet)
         else:
             prendreCarteDefausse(joueur)
 
@@ -134,16 +141,18 @@ def carteSpeciale(temp,joueur):
         print("Vous avez défaussé un 10, vous pouvez rejouer !")
         time.sleep(3)
         piocheOuDefausse(joueur)
+        carteSpeciale(defausse[-1],count-1)
         return
 
 def cactus():
     # si c'est en javascript proposer un bouton qui active la fonction
+    global finjeu
     reponse=""
-    while(reponse!="oui" or reponse!="non"):
+    while reponse not in ["oui", "non"]:
         print("Cactus ? (oui ou non)\n")
         reponse=input()
         #lowercase
-    if(reponse!="oui"):
+    if(reponse=="non"):
         return
     else:
         print("CACTUS !\n")
@@ -175,22 +184,43 @@ for main in mains_joueurs:
     montrerCarte(main)
 finjeu=True
 
+
 count=0
 while(finjeu):
+    temp=False
     if(count==0):
         tour+=1
     count+=1
     print(f"Tour {tour} du joueur {count}")
-    time.sleep(4)
+    time.sleep(3)
     if defausse:
         print(f"Carte dans la défausse: {defausse[-1]}")
         time.sleep(3)
         piocheOuDefausse(count-1)
         carteSpeciale(defausse[-1],count-1)
+        
     else:
         print("La défausse est vide.")
-        pioche(count-1)
+        pioche(count-1,paquet)
         carteSpeciale(defausse[-1],count-1)
     if(count==nbjoueurs):
         count=0
-
+    cactus()
+    if temp:
+        finjeu=False
+    if not finjeu:
+        print("Dernier tour !")
+        temp=True
+        finjeu=True
+    
+#Quelqu'un a fait cactus
+print("Fin du jeu ! Calcul des points...")
+time.sleep(1)
+points_joueurs=[]
+for joueur in range(nbjoueurs):
+    for cartes in mains_joueurs[joueur].cartes:
+        points_joueurs.append(0)
+        points_joueurs[joueur] += cartes.points
+print("Total des points:\n")
+for joueur in range(nbjoueurs):
+    print(f"Joueur {joueur+1}: {points_joueurs[joueur]} points !")
