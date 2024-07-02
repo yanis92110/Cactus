@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exécuter du Code Python</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Exécutez votre Code Python</h1>
+    <textarea id="pythonCode" rows="10" cols="50"></textarea><br>
+    <button id="runCodeButton">Exécuter le Code</button>
+    <pre id="output"></pre>
+
+    <script>
+        $(document).ready(function() {
+            $('#runCodeButton').click(function() {
+                var code = $('#pythonCode').val();
+                
+                $.ajax({
+                    url: '/execute_code',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({code: code}),
+                    success: function(response) {
+                        $('#output').text(response.output);
+                    },
+                    error: function(error) {
+                        $('#output').text('Erreur: ' + error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
