@@ -1,0 +1,1 @@
+Pour la partie en ligne, déjà essayer de faire communiquer deux machines entre elles par exemples un systeme de chat pour ensuite faire plus compliqué, voir avec romu ou momo (video sur youtube)
