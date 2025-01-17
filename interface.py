@@ -1,26 +1,30 @@
 import pygame
 import sys
-#from cartes import *
-#from jeu import *
+from cartes import *
+from jeu import *
+
+
 # Initialiser Pygame
 pygame.init()
 
 # Définir les dimensions de la fenêtre
-window_size = (1200, 1000)
+window_size = (1080, 720)
 window = pygame.display.set_mode(window_size)
 pygame.display.set_caption("Jeu de Cartes")
 
 images_path_joueur=[]
+print(len(mains_joueurs))
+print(mains_joueurs[0])
 for main in mains_joueurs:
-    for i in range(0,3):
-        images_path_joueur.append((0,main[i]))
+    for i in range(0,4):
+        images_path_joueur.append((f"static/img/{main.cartes[i]}"))
 print(images_path_joueur)
-images_path = ["img/cinq de coeur.png","img/as de trefle.png"]
+
 
 loaded_images = []
 
-for path in images_path:
-    image = pygame.image.load(path)
+for path in images_path_joueur:
+    image = pygame.image.load(f"{path}.png")
     image = pygame.transform.scale(image,(150,200))
     loaded_images.append(image)
 image_positions=[]
