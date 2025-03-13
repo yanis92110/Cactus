@@ -7,18 +7,7 @@ paquet.battre()
 defausse=[] #La défausse doit etre définie avant son appel dans les fonctions précédentes
 
 
-def creerMain():
-    main=Main()
-    for i in range(0,4):
-        carte=paquet.pop_carte()
-        main.ajouter_carte(carte)
-    return main
 
-def montrerCarte(main):
-    print("*********")
-    print(main.cartes[0])
-
-    print(main.cartes[1])
 def paquet_vide(paquet):
     if(paquet.cartes == []):
         derniere_carte=defausse.pop()
