@@ -15,35 +15,6 @@ def paquet_vide(paquet):
         paquet=paquet.battre
         defausse=[derniere_carte]
 
-def pioche(joueur,paquet):
-        main=mains_joueurs[joueur]
-        print("Vous allez piocher dans la pioche")
-        time.sleep(1)
-        paquet_vide(paquet)
-        temp=paquet.pop_carte()
-        print(f"La carte qui a été pioché est: {temp}")
-        print("Voulez vous garder la carte ou la défausser ? (g ou d)")
-        reponse=input()
-        while not(reponse=='g' or reponse=='d'):
-            print("Entrez 'g' pour la garder ou 'd' pour la défausser:\n")
-            reponse=input()
-        if(reponse=='d'):
-            defausse.append(temp)
-        else:
-            print("Avec quelle carte voulez vous échanger ? (1,2,3,4)")
-            reponse=input()
-            while reponse not in ["1","2","3","4"]:
-                print("Avec quelle carte voulez vous échanger ? (1,2,3,4)")
-                reponse=input()
-            
-            defausse.append(main.cartes[int(reponse)-1])
-            #ATTENTION, vérifier si la main courante est bien celle du joueur
-            main.cartes[int(reponse)-1]=temp
-        print("Le joueur a défaussé une carte, carte de la défausse:")
-        print(defausse[-1])
-        time.sleep(2)
-
-
 def prendreCarteDefausse(joueur):
         main=mains_joueurs[joueur]
         print("Vous allez piocher dans la défausse")

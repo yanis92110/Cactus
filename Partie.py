@@ -37,13 +37,48 @@ class Partie():
             self.defausse.ajouter_carte(carte_courante)
         else:
             print("Avec quelle carte voulez vous échanger ?")
-            for i in range(MainJoueur.nombreCartes):
-                print(f"Echanger avec la carte N°{i}")
+            temp=0
+            for i in range(joueur.nombreCartes()):
+                temp+=1
+                print(f"Echanger avec la carte N°{i}: {i}")
+            
+            reponse = input()
+            while not reponse.isdigit() or int(reponse) >= temp:
+                print(f"Entrer un nombre entre 0 et {temp-1}")
+                reponse = input()
+            reponse = int(reponse)
+            temp = joueur.getCarte(reponse)
+            joueur.setCarte(reponse,carte_courante)
+            self.defausse.ajouter_carte(temp)
+
+    def piocheDefausse(self,joueur: MainJoueur):
+        print("Vous avez choisi de piocher dans la défausse !")
+        if self.defausse.est_vide():
+            print("Defausse vide tete de neuille.")
+            self.pioche(joueur)
+        else:
+            carte_courante = self.defausse.pop_carte()
+            print(f"La carte qui a été pioché est: {carte_courante}")
+            print(f"Avec quelle carte voulez vous l'échanger ? (Entre 0 et {joueur.nombreCartes()})")
+            reponse = input()
+            self.defausse.ajouter_carte(joueur.getCarte(reponse))
+            joueur.setCarte(reponse,carte_courante)
+            print("Le joueur a défaussé la carte:")
+            print(self.defausse.cartes[-1])
+
+    def piocheOuDefausse(self,joueur):
+        print(self.paquet.cartes[-1])
+        reponse='a'
+        while not(reponse=='p' or reponse=='d'):
+            print("Que voulez vous faire ?\n d: piocher dans la défausse\n p: piocher dans la pioche")
+            reponse = input()
+        if reponse=='p':
+            self.pioche(joueur)
+        else:
+            self.piocheDefausse(self,joueur)
+
 
     def jouer(self):
-        self.joueurs[0].getCarte(0)
-        self.joueurs[0].getCarte(1)
-        self.pioche(self.joueurs[0])
-        self.joueurs[0].getCarte(0)
-        self.joueurs[0].getCarte(1)
-    
+        print(self.joueurs[0].getCarte(0))
+        print(self.joueurs[0].getCarte(1))
+        self.piocheOuDefausse(self.joueurs[0])
