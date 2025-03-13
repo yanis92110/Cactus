@@ -19,7 +19,7 @@ class Partie():
     def pioche(self,joueur: MainJoueur):
         print("Entrée dans la pioche...")
 
-        if self.paquet.est_vide:
+        if self.paquet.est_vide():
             """Alors on remélange la défausse et elle devient le paquet courant"""
             derniere_carte = self.defausse.pop_carte
             self.paquet.cartes = self.defausse.cartes.copy()
@@ -41,6 +41,9 @@ class Partie():
                 print(f"Echanger avec la carte N°{i}")
 
     def jouer(self):
-        #print(self.paquet)
+        self.joueurs[0].getCarte(0)
+        self.joueurs[0].getCarte(1)
         self.pioche(self.joueurs[0])
+        self.joueurs[0].getCarte(0)
+        self.joueurs[0].getCarte(1)
     
