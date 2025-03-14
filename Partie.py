@@ -1,7 +1,7 @@
 
 from Carte import Carte
 from Paquet import Paquet
-from MainJoueur import MainJoueur
+from Joueur import Joueur
 from time import *
 
 class Partie():
@@ -10,21 +10,23 @@ class Partie():
         """Constructeur qui prend en parametre un nombre de joueur.
         Il initialise un paquet rempli et mélangé ainsi qu'une défausse (Paquet vide).
         Puis il créer autant de mains que de nombre de joueurs"""
-        self.paquet = Paquet(True)
-        self.defausse = Paquet(False)
-        self.tour = 0 #Nombre de tours
-        self.continuer = True # Pour la boucle du jeu
-        self.joueurs = [MainJoueur(self.paquet) for _ in range(nbjoueurs)]
+        self.paquet: Paquet = Paquet(True)
+        self.defausse: Paquet = Paquet(False)
+        self.tour: int = 0 #Nombre de tours
+        self.continuer: bool = True # Pour la boucle du jeu
+        self.joueurs: list = [Joueur(self.paquet,_) for _ in range(nbjoueurs)]
     
     def defausseToPaquet(self):
         """Méthode qui mélange la défausse et devient le paquet courant"""
+        print("Mélange de la défausse...")
         derniere_carte = self.defausse.pop_carte
         self.paquet.cartes = self.defausse.cartes.copy()
         self.paquet.battre()
         self.defausse.cartes=[derniere_carte]
     
-    def pioche(self,joueur: MainJoueur):
+    def pioche(self,joueur: Joueur):
         print("Entrée dans la pioche...")
+        sleep(1)
 
         if self.paquet.est_vide():
             """Alors on remélange la défausse et elle devient le paquet courant"""
@@ -55,8 +57,11 @@ class Partie():
             joueur.setCarte(reponse,carte_courante)
             self.defausse.ajouter_carte(temp)
 
-    def piocheDefausse(self,joueur: MainJoueur):
+        sleep(1)
+
+    def piocheDefausse(self,joueur: Joueur):
         print("Vous avez choisi de piocher dans la défausse !")
+        sleep(1)
         if self.defausse.est_vide():
             print("Defausse vide tete de neuille.")
             self.pioche(joueur)
@@ -69,9 +74,13 @@ class Partie():
             joueur.setCarte(reponse,carte_courante)
             print("Le joueur a défaussé la carte:")
             print(self.defausse.cartes[-1])
+        sleep(2)
 
-    def piocheOuDefausse(self,joueur):
-        print(self.paquet.cartes[-1])
+    def piocheOuDefausse(self,joueur: Joueur):
+        if self.defausse.est_vide():
+            print("Pas de carte dans la défausse !")
+        else:
+            print(self.defausse.cartes[-1])
         reponse='a'
         while not(reponse=='p' or reponse=='d'):
             print("Que voulez vous faire ?\n d: piocher dans la défausse\n p: piocher dans la pioche")
@@ -79,9 +88,9 @@ class Partie():
         if reponse=='p':
             self.pioche(joueur)
         else:
-            self.piocheDefausse(self,joueur)
+            self.piocheDefausse(joueur)
     
-    def carteSpeciale(self,carte_courante: Carte, joueur: MainJoueur):
+    def carteSpeciale(self,carte_courante: Carte, joueur: Joueur):
         """10 Valet ou Dame sont des cartes spéciales"""
         if carte_courante.valeur==1:
             print("Vous venez de défausser un valet ! Vous pouvez échanger deux cartes de n'importe quel joueur ! (oui non)")
@@ -94,16 +103,63 @@ class Partie():
                 reponse2=input()
                 print(f"Quelle carte voulez vous échanger du joueur {reponse1}?")
                 print(f"Entrer une valeur entre 0 et {len(self.joueurs[int(reponse1)].cartes)}")
-                reponse=input()
+                print(f"Quelle carte voulez vous échanger du joueur {reponse1}?")
+                print(f"Entrer une valeur entre 0 et {len(self.joueurs[int(reponse2)].cartes)}")
+                carte1=input()
+                carte2=input()
                 reponse=int(reponse)
-                reponse1=int(reponse1)
-                reponse2=int(reponse2)
-                self.joueurs[reponse1].cartes[]
+                carte1=int(carte1)
+                carte2=int(carte2)
+                self.joueurs[reponse1].cartes[carte1],self.joueurs[reponse2].cartes[carte2] = self.joueurs[reponse2].cartes[carte2],self.joueurs[reponse1].cartes[carte1]
+        elif carte_courante.valeur==12:
+            print("Vous avez défaussé une dame, vous pouvez regarder une de vos cartes !")
+            print(f"Quelle carte voulez vous regarder ? Entre 0 et {joueur.nombreCartes()-1}")
+            reponse=input()
+            reponse=int(reponse)
+            print(f"Votre {reponse}e carte est {joueur.getCarte(reponse)}")
+        elif carte_courante.valeur == 10:
+            print("Vous avez défaussé un 10, vous pouvez rejouer !")
+            self.piocheOuDefausse(joueur)
+
                 
 
+    def cactus(self,joueur: Joueur):
+        """Fonction qui demande si cactus et MAJ continuer"""
+        print("Cactus ? (oui non)")
+        reponse=input()
+        if reponse =="oui" and self.continuer:
+            print("CACTUSSZS")
+            print("Dernier tour lancé !")
+            sleep(1)
+            self.continuer=False
+        
+    def premierTour(self):
 
-
+        """Montre les cartes de chaque joueur au debut du tour"""
+        for joueur in self.joueurs:
+            joueur.montrerCarte(0)
+            joueur.montrerCarte(1)
     def jouer(self):
-        print(self.joueurs[0].getCarte(0))
-        print(self.joueurs[0].getCarte(1))
-        self.piocheOuDefausse(self.joueurs[0])
+                    self.tour += 1
+                    print(f"Tour N°{self.tour}")
+                    cpt = 0
+                    joueur_cactus = None
+                    for joueur in self.joueurs:
+                        print("#####################")
+                        print(f"Tour du joueur {joueur.etiquette} ({joueur})")
+                        self.piocheOuDefausse(joueur)
+                        print(f"Carte dans la défausse:")
+                        self.defausse.printDerniereCarte()
+                        self.carteSpeciale(self.defausse.getCarte(-1), joueur)
+                        self.cactus(joueur)
+                        if not self.continuer and joueur_cactus is None:
+                            joueur_cactus = joueur
+                        cpt += 1
+                        # Le joueur qui a lancé le cactus rejoue
+                        if joueur_cactus:
+                            print("#####################")
+                            print(f"Tour du joueur {joueur_cactus.etiquette} ({joueur_cactus})")
+                            self.piocheOuDefausse(joueur_cactus)
+                            print(f"Carte dans la défausse:")
+                            self.defausse.printDerniereCarte()
+                            self.carteSpeciale(self.defausse.getCarte(-1), joueur_cactus)

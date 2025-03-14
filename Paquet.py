@@ -29,8 +29,13 @@ class Paquet:
     def pop_carte(self):
         return self.cartes.pop()
         
-    def ajouter_carte(self, carte):
+    def ajouter_carte(self, carte: Carte):
         self.cartes.append(carte)
+    def getCarte(self, index: int):
+        return self.cartes[index]
+    def printDerniereCarte(self):
+        if not self.est_vide():
+            print(self.cartes[-1])
 
 
 
