@@ -1,5 +1,5 @@
 
-
+from Carte import Carte
 from Paquet import Paquet
 from MainJoueur import MainJoueur
 from time import *
@@ -16,15 +16,19 @@ class Partie():
         self.continuer = True # Pour la boucle du jeu
         self.joueurs = [MainJoueur(self.paquet) for _ in range(nbjoueurs)]
     
+    def defausseToPaquet(self):
+        """Méthode qui mélange la défausse et devient le paquet courant"""
+        derniere_carte = self.defausse.pop_carte
+        self.paquet.cartes = self.defausse.cartes.copy()
+        self.paquet.battre()
+        self.defausse.cartes=[derniere_carte]
+    
     def pioche(self,joueur: MainJoueur):
         print("Entrée dans la pioche...")
 
         if self.paquet.est_vide():
             """Alors on remélange la défausse et elle devient le paquet courant"""
-            derniere_carte = self.defausse.pop_carte
-            self.paquet.cartes = self.defausse.cartes.copy()
-            self.paquet.battre()
-            self.defausse.cartes=[derniere_carte]
+            self.defausseToPaquet()
 
         carte_courante = self.paquet.pop_carte()
         print(f"Vous avez pioché la carte: {carte_courante}")
@@ -76,6 +80,27 @@ class Partie():
             self.pioche(joueur)
         else:
             self.piocheDefausse(self,joueur)
+    
+    def carteSpeciale(self,carte_courante: Carte, joueur: MainJoueur):
+        """10 Valet ou Dame sont des cartes spéciales"""
+        if carte_courante.valeur==1:
+            print("Vous venez de défausser un valet ! Vous pouvez échanger deux cartes de n'importe quel joueur ! (oui non)")
+            reponse=input()
+            if reponse=="oui":
+                print("Avec quel joueur voulez vous échanger votre carte ?")
+                print(f"Entrer 2 réponses entre 0 et {len(self.joueurs)-1}, vous etes joueur {self.joueurs.index(joueur)} (0 et 1 pour les joueurs 0 et 1)")
+                #Verifs
+                reponse1=input()
+                reponse2=input()
+                print(f"Quelle carte voulez vous échanger du joueur {reponse1}?")
+                print(f"Entrer une valeur entre 0 et {len(self.joueurs[int(reponse1)].cartes)}")
+                reponse=input()
+                reponse=int(reponse)
+                reponse1=int(reponse1)
+                reponse2=int(reponse2)
+                self.joueurs[reponse1].cartes[]
+                
+
 
 
     def jouer(self):
