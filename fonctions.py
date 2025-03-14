@@ -8,41 +8,6 @@ defausse=[] #La défausse doit etre définie avant son appel dans les fonctions 
 
 
 
-def paquet_vide(paquet):
-    if(paquet.cartes == []):
-        derniere_carte=defausse.pop()
-        paquet.cartes=defausse.cartes.copy()
-        paquet=paquet.battre
-        defausse=[derniere_carte]
-
-def prendreCarteDefausse(joueur):
-        main=mains_joueurs[joueur]
-        print("Vous allez piocher dans la défausse")
-        temp=defausse.pop()
-        print(f"La carte qui a été pioché est: {temp}")
-        print("Avec quelle carte voulez vous échanger ? (1,2,3,4)")
-        reponse=input()
-        while reponse not in ["1","2","3","4"]:
-            print("Avec quelle carte voulez vous échanger ? (1,2,3,4)")
-            reponse=input()
-        defausse.append(main.cartes[int(reponse)-1])
-        main.cartes[int(reponse)-1]=temp
-        print("Le joueur a défaussé une carte, carte de la défausse:")
-        print(defausse[-1])
-        time.sleep(2)
-    
-def piocheOuDefausse(joueur):
-        main=mains_joueurs[joueur]
-        print("Que voulez vous faire ?\n d: piocher dans la défausse\n p: piocher dans la pioche")
-        reponse=input()
-        while not(reponse=='p' or reponse=='d'):
-            print("Que voulez vous faire ?\n d: piocher dans la défausse\n p: piocher dans la pioche")
-            reponse=input()
-        if(reponse=='p'):
-            pioche(joueur,paquet)
-        else:
-            prendreCarteDefausse(joueur)
-
 def carteSpeciale(temp,joueur):
     main=mains_joueurs[joueur]
     if(temp.valeur==11):
