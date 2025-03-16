@@ -1,7 +1,6 @@
 import pygame
 import sys
-from cartes import *
-from jeu import *
+from Partie import Partie
 
 
 # Initialiser Pygame
@@ -10,9 +9,9 @@ pygame.init()
 # Définir les dimensions de la fenêtre
 window_size = (1080, 720)
 window = pygame.display.set_mode(window_size)
-pygame.display.set_caption("Jeu de Cartes")
+pygame.display.set_caption("Cactus")
 
-images_path_joueur=[]
+"""images_path_joueur=[]
 
 
 
@@ -20,7 +19,13 @@ for main in mains_joueurs:
     for i in range(0,4):
         images_path_joueur.append((f"static/img/{main.cartes[i]}"))
 
+"""
+images_path_joueur = []
+jeu = Partie(2)
 
+for joueur in jeu.joueurs:
+    for carte in joueur.cartes:
+        images_path_joueur.append((f"static/img/{carte}"))
 
 loaded_images = []
 
